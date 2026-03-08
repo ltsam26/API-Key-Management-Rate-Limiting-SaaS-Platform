@@ -60,10 +60,50 @@ const getApiKeyWithProject = async (keyId) => {
   return result.rows[0];
 };
 
+
+      const crypto = require("crypto");
+const bcrypt = require("bcrypt");
+
+const rotateApiKey = async (keyId) => {
+  // 1️⃣ Deactivate old key
+  await pool.query(
+    `UPDATE api_keys SET is_active = false WHERE id = $1`,
+    [keyId]
+  );
+
+  // 2️⃣ Generate new key
+  const newRawKey = crypto.randomBytes(32).toString("hex");
+  const hashedKey = await bcrypt.hash(newRawKey, 10);
+
+  // 3️⃣ Get project_id of old key
+  const result = await pool.query(
+    `SELECT project_id FROM api_keys WHERE id = $1`,
+    [keyId]
+  );
+
+  const projectId = result.rows[0].project_id;
+
+  // 4️⃣ Insert new key
+  const insertResult = await pool.query(
+    `
+    INSERT INTO api_keys (project_id, key_hash)
+    VALUES ($1, $2)
+    RETURNING id
+    `,
+    [projectId, hashedKey]
+  );
+
+  return {
+    newKey: newRawKey,
+    keyId: insertResult.rows[0].id,
+  };
+};
+
 module.exports = {
   createApiKey,
   getApiKeysByProjectId,
   getAllActiveApiKeys,
   revokeApiKey, // ADD THIS
   getApiKeyWithProject,
+  rotateApiKey,
 };

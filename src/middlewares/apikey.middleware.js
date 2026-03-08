@@ -25,13 +25,22 @@ const apiKeyMiddleware = async (req, res, next) => {
     if (!validKey) {
       return res.status(403).json({ message: "Invalid API key" });
     }
-
-    // Attach project and api key info to request
     req.projectId = validKey.project_id;
     req.apiKeyId = validKey.id;
 
-    // Log API usage automatically
-    await createUsageLog(validKey.id, req.originalUrl, req.method);
+    // Log after response finishes
+    res.on("finish", async () => {
+      try {
+        await createUsageLog(
+          validKey.id,
+          req.originalUrl,
+          req.method,
+          res.statusCode
+        );
+      } catch (err) {
+        console.error("Logging failed:", err.message);
+      }
+    });
 
     next();
   } catch (error) {
