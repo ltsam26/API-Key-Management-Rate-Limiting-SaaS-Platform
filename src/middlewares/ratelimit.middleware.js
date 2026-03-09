@@ -4,21 +4,18 @@ const { countRequestsInWindow } = require("../models/ratelimit.model");
 const rateLimitMiddleware = async (req, res, next) => {
   try {
     const apiKeyId = req.apiKeyId;
-    const projectId = req.projectId;
 
-    if (!apiKeyId || !projectId) {
+    if (!apiKeyId) {
       return res.status(500).json({ message: "API key context missing" });
     }
 
-    // 1 minute time window
     const windowStart = new Date(Date.now() - 60 * 1000);
 
     const requestCount = await countRequestsInWindow(apiKeyId, windowStart);
 
-    // 🔹 Fetch project-specific rate limit
     const limitResult = await pool.query(
-      `SELECT rate_limit_per_minute FROM projects WHERE id = $1`,
-      [projectId]
+      `SELECT rate_limit_per_minute FROM api_keys WHERE id = $1`,
+      [apiKeyId]
     );
 
     const rateLimit = limitResult.rows[0].rate_limit_per_minute;
