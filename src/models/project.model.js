@@ -15,7 +15,7 @@ const getProjectsByUserId = async (userId) => {
   const query = `
     SELECT id, name, created_at
     FROM projects
-    WHERE user_id = $1 AND is_active = true
+    WHERE user_id = $1 
     ORDER BY created_at DESC
   `;
   const result = await pool.query(query, [userId]);
