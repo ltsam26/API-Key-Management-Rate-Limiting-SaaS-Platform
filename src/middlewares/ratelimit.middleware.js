@@ -1,4 +1,5 @@
 const pool = require("../config/db");
+//const { countRequestsInWindow } = require("../models/ratelimit.model");
 const { countRequestsInWindow } = require("../models/ratelimit.model");
 
 const rateLimitMiddleware = async (req, res, next) => {
