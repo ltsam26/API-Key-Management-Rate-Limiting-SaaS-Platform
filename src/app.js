@@ -41,6 +41,7 @@ const apiKeyRoutes = require("./routes/apikey.routes");
 const publicRoutes = require("./routes/public.routes");
 const analyticsRoutes = require("./routes/analytics.routes");
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+const adminRoutes = require("./routes/admin.routes");
 
 
 
@@ -51,6 +52,7 @@ app.use("/api/keys", apiKeyRoutes);
 app.use("/api/public", publicRoutes);
 app.use("/api/auth", authLimiter);
 app.use("/api/analytics", analyticsRoutes);
+app.use("/api/admin", adminRoutes);
 
 
 module.exports = app;
