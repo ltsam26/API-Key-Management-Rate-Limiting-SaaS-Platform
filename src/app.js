@@ -17,11 +17,9 @@ const authLimiter = rateLimit({
 });
 // Middlewares
 app.use(cors({
-  origin: [
-    "http://localhost:5174",
-    "http://localhost:3000"
-  ],
-  credentials: true
+  origin: ["http://localhost:5173"],
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  allowedHeaders: ["Content-Type", "Authorization", "x-api-key"]
 }));
 app.use(express.json());
 app.use(morgan("dev"));

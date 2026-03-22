@@ -6,7 +6,11 @@ function App() {
   useEffect(() => {
     const testAPI = async () => {
       try {
-        const res = await API.get("/");
+        const res = await API.get("/public/data", {
+          headers: {
+            "x-api-key": "8385157efe7eceb6a81bf1b32f31112b6e77a90d380d11c2abf5bcb71b9995ba"
+          }
+        });
         console.log(res.data);
       } catch (err) {
         console.error(err);
