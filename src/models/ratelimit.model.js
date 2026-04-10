@@ -1,13 +1,13 @@
 const pool = require("../config/db");
 
-const countRequestsInWindow = async (apiKeyId, windowStart) => {
+const countRequestsInWindow = async (apiKeyId) => {
   const query = `
     SELECT COUNT(*) 
     FROM usage_logs
-    WHERE api_key_id = $1 AND created_at >= $2
+    WHERE api_key_id = $1 AND created_at >= NOW() - INTERVAL '1 minute'
   `;
 
-  const result = await pool.query(query, [apiKeyId, windowStart]);
+  const result = await pool.query(query, [apiKeyId]);
 
   return parseInt(result.rows[0].count, 10);
 };

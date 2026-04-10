@@ -1,3 +1,4 @@
+// Server bootstrap — restarted to reload analytics model fix #3
 const express = require("express");
 const dotenv = require("dotenv");
 const cors = require("cors");
@@ -17,13 +18,15 @@ const authLimiter = rateLimit({
 });
 // Middlewares
 app.use(cors({
-  origin: ["http://localhost:5173"],
+  origin: "*",
   methods: ["GET", "POST", "PUT", "DELETE"],
   allowedHeaders: ["Content-Type", "Authorization", "x-api-key"]
 }));
 app.use(express.json());
 app.use(morgan("dev"));
 app.use(helmet());
+const passport = require("passport");
+app.use(passport.initialize());
 
 // Health check route (important for deployment later)
 app.get("/", (req, res) => {
@@ -42,6 +45,8 @@ const publicRoutes = require("./routes/public.routes");
 const analyticsRoutes = require("./routes/analytics.routes");
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 const adminRoutes = require("./routes/admin.routes");
+const paymentRoutes = require("./routes/payment.routes");
+const aiRoutes = require("./routes/ai.routes");
 
 
 
@@ -50,9 +55,15 @@ app.use("/api/user", userRoutes);
 app.use("/api/projects", projectRoutes);
 app.use("/api/keys", apiKeyRoutes);
 app.use("/api/public", publicRoutes);
-app.use("/api/auth", authLimiter);
 app.use("/api/analytics", analyticsRoutes);
 app.use("/api/admin", adminRoutes);
 
+
+const supportRoutes = require("./routes/support.routes");
+
+app.use("/api/billing", paymentRoutes);
+app.use("/api/payment", paymentRoutes);
+app.use("/api/ai", aiRoutes);
+app.use("/api/support", supportRoutes);
 
 module.exports = app;

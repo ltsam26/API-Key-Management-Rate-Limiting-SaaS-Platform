@@ -1,13 +1,21 @@
-FROM node:20
+# Use official Node.js lts image
+FROM node:22-slim
 
+# Create app directory
 WORKDIR /app
 
+# Copy package files
 COPY package*.json ./
 
-RUN npm install
+# Install dependencies
+RUN npm install --production
 
+# Copy app source
 COPY . .
 
-EXPOSE 5000
+# Expose the API port (as per .env simulation 5050, but usually 5000 in prod)
+# We will use the PORT env var in docker-compose
+EXPOSE 5050
 
-CMD ["npm", "run", "dev"]
+# Start command
+CMD ["node", "src/server.js"]
