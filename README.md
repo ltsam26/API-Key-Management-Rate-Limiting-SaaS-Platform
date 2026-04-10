@@ -118,4 +118,4 @@ SRSync features a built-in **Simulation Mode** for subscription testing. You can
 This project is licensed under the MIT License - see the LICENSE file for details.
 
 ---
-*Built with ❤️ for the Developer Community.*
+
