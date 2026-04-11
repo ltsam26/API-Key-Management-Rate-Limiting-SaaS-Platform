@@ -1,121 +1,116 @@
-# 🚀 SRSync: Professional API Key Management & Rate Limiting SaaS
+# 🚀 SRsync: Secure API Management & Rate-Limiting SaaS Platform
 
-![SRSync Banner](https://img.shields.io/badge/Production--Grade-API--Platform-7c6fcd?style=for-the-badge&logo=rocket)
-![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)
-![Tech Stack](https://img.shields.io/badge/Stack-Node--Postgres--Redis-blue?style=for-the-badge)
-
-**SRSync** is an enterprise-ready API management platform that simulates the infrastructure used by world-class providers like Stripe and OpenAI. It offers a complete suite for secure API access, intelligent rate limiting, real-time analytics, and AI-driven support.
+**A production-ready SaaS platform for developers to manage API keys, monitor usage, and enforce rate-limiting with a built-in AI support engine.**
 
 ---
 
-## ✨ Key Features
+## 🔒 Problem Statement
+Managing API security, usage tracking, and tiered subscriptions is complex and time-consuming for developers. Most solutions are either too expensive or lack integrated monitoring and AI-driven support.
 
-### 🔐 Advanced Authentication
-*   **Multi-Provider OAuth**: One-click Sign-in/Sign-up with **Google** and **GitHub**.
-*   **JWT Security**: Robust session management with encrypted token storage.
-*   **Account Linking**: Smart matching of existing email accounts across providers.
-
-### 🔑 API Key Governance
-*   **Secure Generation**: Industry-standard cryptographic key creation.
-*   **Project Context**: Group keys by project for granular organization.
-*   **Lifecycle Control**: Instantly create, rotate, or revoke keys via a premium dashboard.
-
-### ⚡ Intelligent Rate Limiting
-*   **Redis-Powered**: High-performance tracking using sliding window algorithms.
-*   **Tiered Plans**: Flexible limits (Basic to Enterprise) mapped directly to your account.
-*   **Instant Enforcement**: Real-time 429 (Too Many Requests) blocking to protect infrastructure.
-
-### 📊 Real-time Monitoring & AI
-*   **Visual Analytics**: Time-series charts for request volume, errors, and performance.
-*   **AI Assistant**: Context-aware floating AI widget (Powered by Gemini) for instant usage analysis and troubleshooting.
-*   **Usage Quotas**: Visual progress gauges for daily and monthly API consumption.
+## 💡 Solution Overview
+SRsync provides a unified dashboard where developers can:
+- **Generate Secure Keys**: Create and manage project-specific API keys.
+- **Enforce Rate Limits**: Track and limit requests based on subscription tiers.
+- **Simulate Billing**: Test premium features using a high-fidelity payment simulation mode.
+- **AI-Powered Support**: Get instant technical help via a Gemini-integrated support desk.
 
 ---
 
-## 🛠️ Technology Stack
-
-| Layer | Technology |
+## 🛠️ Tech Stack
+| Layer | Technologies |
 | :--- | :--- |
-| **Frontend** | React 19, Vite, Recharts, Custom HSL Theming |
-| **Backend** | Node.js, Express.js, Passport.js |
-| **Database** | PostgreSQL (Relational Data & Subscriptions) |
-| **Cache** | Redis (Rate Limiting & Session Storage) |
-| **AI** | Google Gemini Pro |
-| **Deployment** | Docker, Docker Compose, Nginx |
+| **Frontend** | React 18, Vite, Vanilla CSS (Premium Design), Lucide Icons, Recharts |
+| **Backend** | Node.js, Express, JWT, Bcrypt |
+| **Data & Cache** | PostgreSQL (Primary DB), Redis (Rate Limiting & Caching) |
+| **AI Integration** | Google Gemini 1.5 Flash |
+| **Infrastructure** | Docker, Docker Compose, Nginx, AWS EC2 |
 
 ---
 
-## 🚀 Quick Start (Local Development)
+## ✨ Features
+- **Project Workspaces**: Organize API keys by individual projects.
+- **Real-time Analytics**: Visual charts for API hits, latency, and status codes.
+- **Multi-Plan Billing**: Support for Free, Pro, and Enterprise tiers (Simulation Mode included).
+- **Security First**: All keys are stored as cryptographic hashes; JWT-based session management.
+- **Responsive UI**: Sleek, glassmorphic dark-mode dashboard.
 
-### 1️⃣ Prerequisites
-*   Node.js (v20+)
-*   PostgreSQL & Redis (Running locally or via Docker)
-*   GitHub/Google OAuth Credentials
+---
 
-### 2️⃣ Clone & Install
+## 🌐 Live Demo & Deployment
+- **Live URL**: [http://13.50.245.234](http://13.50.245.234)
+- **Deployment**: Hosted on **AWS EC2 (Ubuntu 24.04)** using a containerized architecture with Docker Compose.
+
+---
+
+## 🏗️ Project Folder Structure
+```text
+├── frontend/             # React application (Vite)
+│   ├── src/              # Components, Pages, Hooks, Services
+│   └── Dockerfile        # Nginx-based frontend build
+├── src/                  # Backend API (Node.js)
+│   ├── controllers/      # Route logic handlers
+│   ├── models/           # Database schemas and queries
+│   ├── routes/           # API path definitions
+│   └── middlewares/      # API Key & Rate limiting logic
+├── docker-compose.yml    # Full stack orchestration (DB, Redis, API, UI)
+└── .env                  # Environment configuration
+```
+
+---
+
+## ⚙️ Installation & Local Setup
+
+### Prerequisites
+- Docker & Docker Compose
+- Node.js v18+ (for local development)
+
+### Step 1: Clone the Repository
 ```bash
 git clone https://github.com/ltsam26/API-Key-Management-Rate-Limiting-SaaS-Platform.git
-cd api-platform
-npm install
-cd frontend && npm install
+cd API-Key-Management-Rate-Limiting-SaaS-Platform
 ```
 
-### 3️⃣ Configure Environment
-Create a `.env` in the root:
+### Step 2: Environment Variables
+Create a `.env` file in the root directory:
 ```env
 PORT=5050
-DATABASE_URL=postgresql://user:pass@localhost:5432/db
-REDIS_URL=redis://localhost:6379
-JWT_SECRET=super_secret
+DATABASE_URL=postgresql://postgres:1234@db:5432/api_platform
+REDIS_URL=redis://redis:6379
+JWT_SECRET=your_super_secret_key
+GEMINI_API_KEY=your_gemini_key
+RESEND_API_KEY=your_resend_api_key
 GOOGLE_CLIENT_ID=...
-GOOGLE_CLIENT_SECRET=...
 GITHUB_CLIENT_ID=...
-GITHUB_CLIENT_SECRET=...
-GEMINI_API_KEY=...
+FRONTEND_URL=http://localhost
 ```
 
-### 4️⃣ Run
-```bash
-# Backend
-npm run dev
-# Frontend
-cd frontend && npm run dev
-```
-
----
-
-## 🐳 Deployment (Docker)
-
-Launch the entire stack (Frontend, Backend, DB, Redis) with a single command:
-
+### Step 3: Docker Deployment (Recommended)
 ```bash
 docker-compose up --build -d
+# Run initialization script to setup tables
+docker exec -it srsync-backend node db-init.js
 ```
-*   **UI**: [http://localhost](http://localhost)
-*   **API**: [http://localhost:5050](http://localhost:5050)
 
 ---
 
-## 📋 API Specification
-
-All protected routes require the `x-api-key` header.
-
-| Endpoint | Method | Description |
+## 📡 API Endpoints
+| Method | Endpoint | Description |
 | :--- | :--- | :--- |
-| `/api/auth/google` | GET | Initiates Google OAuth flow |
-| `/api/public/data` | GET | Example public API (simulated) |
-| `/api/keys` | POST | Generate a new API key |
-| `/api/analytics` | GET | Fetch usage statistics |
+| `POST` | `/api/auth/signup` | Register a new developer account |
+| `POST` | `/api/projects` | Create a new API workspace |
+| `GET` | `/api/keys` | List current active API keys |
+| `POST` | `/api/support/chat` | AI support interaction |
 
 ---
 
-## 🧪 Simulation Mode (Testing)
-SRSync features a built-in **Simulation Mode** for subscription testing. You can instantly upgrade your account between Basic, Pro, and Enterprise tiers without a real payment gateway to validate rate-limit behavior and UI responsiveness.
+## ⏭️ Future Improvements
+- [ ] **Custom Domains**: Allow users to map their own domains to API endpoints.
+- [ ] **Webhooks**: Notify developers when keys reach 90% quota.
+- [ ] **SDKs**: Official Python and JavaScript SDKs for easier integration.
 
 ---
 
-## 📄 License
-This project is licensed under the MIT License - see the LICENSE file for details.
-
----
-
+## 👤 Author / Contact
+**Samir Sonkar**
+- GitHub: [@ltsam26](https://github.com/ltsam26)
+- Email: sonkarsamir2035@gmail.com
