@@ -33,6 +33,7 @@ const signup = async (req, res) => {
       token: token,
     });
   } catch (error) {
+    console.error("[Auth] Signup Error:", error);
     res.status(500).json({ message: "Server error", error: error.message });
   }
 };
@@ -70,6 +71,7 @@ const login = async (req, res) => {
       },
     });
   } catch (error) {
+    console.error("[Auth] Login Error:", error);
     res.status(500).json({ message: "Server error", error: error.message });
   }
 };
