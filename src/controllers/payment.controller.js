@@ -2,11 +2,16 @@ const pool = require("../config/db");
 const crypto = require("crypto");
 const Razorpay = require("razorpay");
 
-/* ─── Razorpay instance ─── */
-const razorpay = new Razorpay({
-  key_id:     process.env.RAZORPAY_KEY_ID,
-  key_secret: process.env.RAZORPAY_KEY_SECRET,
-});
+/* ─── Razorpay instance (Optional for testing) ─── */
+let razorpay = null;
+if (process.env.RAZORPAY_KEY_ID && process.env.RAZORPAY_KEY_SECRET) {
+  razorpay = new Razorpay({
+    key_id:     process.env.RAZORPAY_KEY_ID,
+    key_secret: process.env.RAZORPAY_KEY_SECRET,
+  });
+} else {
+  console.warn('[Billing] Razorpay keys missing. Payment features will be disabled.');
+}
 
 /* ─── Plan definitions (single source of truth) ─── */
 const PLANS = {
