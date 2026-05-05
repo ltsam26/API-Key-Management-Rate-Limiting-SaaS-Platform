@@ -46,7 +46,7 @@ const getBillingOverview = async (req, res) => {
 
     const usageRes = await pool.query(
       `SELECT COUNT(*) AS requests
-       FROM usage_logs l
+       FROM api_logs l
        JOIN api_keys a ON l.api_key_id = a.id
        JOIN projects p ON a.project_id = p.id
        WHERE p.user_id = $1 AND l.created_at >= NOW() - INTERVAL '30 days'`,
@@ -55,7 +55,7 @@ const getBillingOverview = async (req, res) => {
 
     const todayRes = await pool.query(
       `SELECT COUNT(*) AS today_requests
-       FROM usage_logs l
+       FROM api_logs l
        JOIN api_keys a ON l.api_key_id = a.id
        JOIN projects p ON a.project_id = p.id
        WHERE p.user_id = $1 AND DATE(l.created_at) = CURRENT_DATE`,
@@ -106,7 +106,7 @@ const getUsageAnalytics = async (req, res) => {
               COUNT(*) AS requests,
               COUNT(*) FILTER (WHERE l.status_code >= 400) AS errors,
               COUNT(*) FILTER (WHERE l.status_code = 429) AS rate_limits
-       FROM usage_logs l
+       FROM api_logs l
        JOIN api_keys a ON l.api_key_id = a.id
        JOIN projects p ON a.project_id = p.id
        WHERE p.user_id = $1 AND l.created_at >= NOW() - INTERVAL '14 days'
@@ -118,7 +118,7 @@ const getUsageAnalytics = async (req, res) => {
       `SELECT p.name AS project, COUNT(l.id) AS tokens
        FROM projects p
        LEFT JOIN api_keys a ON a.project_id = p.id
-       LEFT JOIN usage_logs l ON l.api_key_id = a.id
+       LEFT JOIN api_logs l ON l.api_key_id = a.id
        WHERE p.user_id = $1
        GROUP BY p.id, p.name ORDER BY tokens DESC LIMIT 6`,
       [userId]
@@ -143,7 +143,7 @@ const getBillingApiKeys = async (req, res) => {
               COUNT(l.id) AS total_requests
        FROM api_keys a
        JOIN projects p ON a.project_id = p.id
-       LEFT JOIN usage_logs l ON l.api_key_id = a.id
+       LEFT JOIN api_logs l ON l.api_key_id = a.id
        WHERE p.user_id = $1
        GROUP BY a.id, p.name, p.plan
        ORDER BY a.created_at DESC`,
@@ -321,14 +321,18 @@ const mockUpgrade = async (req, res) => {
 
 /* ─── Internal helper ─── */
 async function _activatePlan(userId, plan) {
+  const planData = PLANS[plan] || PLANS.FREE;
+
   await pool.query(
     `INSERT INTO subscriptions (user_id, plan_type, expires_at)
      VALUES ($1, $2, NOW() + INTERVAL '30 days')`,
     [userId, plan]
   );
+  
+  // Update both plan name and the numeric key limit
   await pool.query(
-    `UPDATE projects SET plan = $1 WHERE user_id = $2`,
-    [plan, userId]
+    `UPDATE projects SET plan = $1, max_api_keys = $2 WHERE user_id = $3`,
+    [plan, planData.maxKeys, userId]
   );
 }
 

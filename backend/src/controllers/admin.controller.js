@@ -5,7 +5,7 @@ const getSystemStats = async (req, res) => {
     const users = await pool.query(`SELECT COUNT(*) FROM users`);
     const projects = await pool.query(`SELECT COUNT(*) FROM projects`);
     const apiKeys = await pool.query(`SELECT COUNT(*) FROM api_keys`);
-    const apiCalls = await pool.query(`SELECT COUNT(*) FROM usage_logs`);
+    const apiCalls = await pool.query(`SELECT COUNT(*) FROM api_logs`);
 
     res.status(200).json({
       system: "API Platform",
@@ -60,8 +60,8 @@ const getApiKeys = async (req, res) => {
 const getUsageLogs = async (req, res) => {
   try {
     const result = await pool.query(`
-      SELECT l.id, l.created_at as timestamp, l.status_code, 'N/A' as ip_address, a.id as key_id, u.email
-      FROM usage_logs l
+      SELECT l.id, l.created_at as timestamp, l.status_code, l.ip_address, a.id as key_id, u.email
+      FROM api_logs l
       JOIN api_keys a ON l.api_key_id = a.id
       JOIN projects p ON a.project_id = p.id
       JOIN users u ON p.user_id = u.id

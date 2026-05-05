@@ -3,8 +3,9 @@ const redisClient = require("../config/redis");
 
 const quotaMap = {
   FREE: 100,
-  PRO: 2000,
-  ENTERPRISE: 10000
+  BASIC: 1000,
+  PRO: 10000,
+  ENTERPRISE: 100000
 };
 
 const quotaMiddleware = async (req, res, next) => {

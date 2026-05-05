@@ -24,7 +24,7 @@ export default function Sidebar() {
     <aside style={styles.sidebar}>
       <div style={styles.logoRow}>
         <img src={logoImgSrc} alt="SRSync Logo" style={styles.logoImg} />
-        SRSync
+        SRSync API
       </div>
 
       <div style={styles.workspaceSelector}>

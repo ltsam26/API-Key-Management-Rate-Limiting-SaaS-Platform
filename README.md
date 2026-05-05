@@ -1,4 +1,4 @@
-# 🚀 SRsync: Secure API Management & Rate-Limiting SaaS Platform
+# 🚀 SRSync API: Secure API Management & Rate-Limiting SaaS Platform
 
 **A production-ready SaaS platform for developers to manage API keys, monitor usage, and enforce rate-limiting with a built-in AI support engine.**
 
@@ -8,7 +8,7 @@
 Managing API security, usage tracking, and tiered subscriptions is complex and time-consuming for developers. Most solutions are either too expensive or lack integrated monitoring and AI-driven support.
 
 ## 💡 Solution Overview
-SRsync provides a unified dashboard where developers can:
+SRSync API provides a unified dashboard where developers can:
 - **Generate Secure Keys**: Create and manage project-specific API keys.
 - **Enforce Rate Limits**: Track and limit requests based on subscription tiers.
 - **Simulate Billing**: Test premium features using a high-fidelity payment simulation mode.

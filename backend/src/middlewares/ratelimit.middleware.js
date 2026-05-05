@@ -17,7 +17,7 @@ const rateLimitMiddleware = async (req, res, next) => {
     );
 
     const plan = limitResult.rows[0]?.plan || 'FREE';
-    const rateLimit = plan === 'ENTERPRISE' ? 1000 : plan === 'PRO' ? 100 : 10;
+    const rateLimit = plan === 'ENTERPRISE' ? 1000 : plan === 'PRO' ? 100 : plan === 'BASIC' ? 30 : 10;
 
     const now = Date.now();
     if (!localRequestCache.has(apiKeyId)) {

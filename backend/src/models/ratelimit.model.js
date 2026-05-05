@@ -3,7 +3,7 @@ const pool = require("../config/db");
 const countRequestsInWindow = async (apiKeyId) => {
   const query = `
     SELECT COUNT(*) 
-    FROM usage_logs
+    FROM api_logs
     WHERE api_key_id = $1 AND created_at >= NOW() - INTERVAL '1 minute'
   `;
 

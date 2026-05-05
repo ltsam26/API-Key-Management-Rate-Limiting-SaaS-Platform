@@ -41,7 +41,7 @@ const getUserOverview = async (req, res) => {
         COUNT(*) AS total_requests,
         COUNT(*) FILTER (WHERE l.status_code >= 400) AS total_errors,
         COUNT(*) FILTER (WHERE l.status_code = 429) AS rate_limits_hit
-      FROM usage_logs l
+      FROM api_logs l
       JOIN api_keys a ON l.api_key_id = a.id
       JOIN projects p ON a.project_id = p.id
       WHERE p.user_id = $1
@@ -55,7 +55,7 @@ const getUserOverview = async (req, res) => {
     // 3. Daily Trend (last 14 days)
     const dailyTrend = await pool.query(`
       SELECT DATE(l.created_at) AS date, COUNT(*) AS requests
-      FROM usage_logs l
+      FROM api_logs l
       JOIN api_keys a ON l.api_key_id = a.id
       JOIN projects p ON a.project_id = p.id
       WHERE p.user_id = $1 AND l.created_at >= NOW() - INTERVAL '14 days'
@@ -68,7 +68,7 @@ const getUserOverview = async (req, res) => {
       SELECT p.name AS project, COUNT(l.id) AS tokens
       FROM projects p
       LEFT JOIN api_keys a ON a.project_id = p.id
-      LEFT JOIN usage_logs l ON l.api_key_id = a.id
+      LEFT JOIN api_logs l ON l.api_key_id = a.id
       WHERE p.user_id = $1
       GROUP BY p.id, p.name
       ORDER BY tokens DESC
@@ -78,7 +78,7 @@ const getUserOverview = async (req, res) => {
     // 5. Recent Activity
     const recentActivity = await pool.query(`
       SELECT l.endpoint, l.method, l.status_code, l.created_at, p.name as project_name
-      FROM usage_logs l
+      FROM api_logs l
       JOIN api_keys a ON l.api_key_id = a.id
       JOIN projects p ON a.project_id = p.id
       WHERE p.user_id = $1

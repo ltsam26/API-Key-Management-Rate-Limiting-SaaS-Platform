@@ -36,7 +36,7 @@ export default function Login() {
       <div style={styles.card}>
         <div style={styles.logo}>
           <img src={logoImgSrc} alt="SRSync Logo" style={styles.logoImg} />
-          SRSync
+          SRSync API
         </div>
         <h2 style={styles.title}>Welcome back</h2>
         <p style={styles.sub}>Sign in to your dashboard</p>

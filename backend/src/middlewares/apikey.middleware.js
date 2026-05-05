@@ -43,21 +43,26 @@ const apiKeyMiddleware = async (req, res, next) => {
     const dailyQuotaKey = `quota:${keyId}:daily`;
 
     // Strategy: 10 req/min for free, higher for others
-    const rpmLimit = validKey.plan === 'pro' ? 100 : (validKey.plan === 'basic' ? 30 : 10);
-    const dailyLimit = validKey.plan === 'pro' ? 10000 : (validKey.plan === 'basic' ? 1000 : 100);
+    const plan = validKey.plan ? validKey.plan.toUpperCase() : 'FREE';
+    const rpmLimit = plan === 'ENTERPRISE' ? 1000 : (plan === 'PRO' ? 100 : (plan === 'BASIC' ? 30 : 10));
+    const dailyLimit = plan === 'ENTERPRISE' ? 100000 : (plan === 'PRO' ? 10000 : (plan === 'BASIC' ? 1000 : 100));
 
-    // Check Minute Rate
-    const currentRpm = await redisClient.incr(rateLimitKey);
-    if (currentRpm === 1) await redisClient.expire(rateLimitKey, 60);
-    if (currentRpm > rpmLimit) {
-      return res.status(429).json({ message: "Rate limit exceeded (Requests per minute)" });
-    }
+    // Check Minute Rate & Daily Quota (Redis-backed)
+    try {
+      const currentRpm = await redisClient.incr(rateLimitKey);
+      if (currentRpm === 1) await redisClient.expire(rateLimitKey, 60);
+      if (currentRpm > rpmLimit) {
+        return res.status(429).json({ message: "Rate limit exceeded (Requests per minute)" });
+      }
 
-    // Check Daily Quota
-    const currentDaily = await redisClient.incr(dailyQuotaKey);
-    if (currentDaily === 1) await redisClient.expire(dailyQuotaKey, 86400); // 1 day
-    if (currentDaily > dailyLimit) {
-      return res.status(429).json({ message: "Daily quota exceeded" });
+      const currentDaily = await redisClient.incr(dailyQuotaKey);
+      if (currentDaily === 1) await redisClient.expire(dailyQuotaKey, 86400); // 1 day
+      if (currentDaily > dailyLimit) {
+        return res.status(429).json({ message: "Daily quota exceeded" });
+      }
+    } catch (redisErr) {
+      console.error("[API Key Middleware] Redis error (failing open):", redisErr.message);
+      // Fail-open: allow request if Redis is unavailable
     }
 
     // 4. Attach context

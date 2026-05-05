@@ -23,7 +23,7 @@ export default function AdminSidebar() {
     <aside style={styles.sidebar}>
       <div style={styles.logo}>
         <img src={logoImgSrc} alt="SRSync Logo" style={styles.logoImg} />
-        SRSync <span style={{fontSize: '10px', color: '#f87171', border: '1px solid #f87171', borderRadius: '4px', padding: '2px 4px'}}>ADMIN</span>
+        SRSync API <span style={{fontSize: '10px', color: '#f87171', border: '1px solid #f87171', borderRadius: '4px', padding: '2px 4px'}}>ADMIN</span>
       </div>
 
       <nav style={styles.nav}>

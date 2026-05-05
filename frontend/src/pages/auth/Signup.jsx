@@ -45,7 +45,7 @@ export default function Signup() {
       <div style={styles.card}>
         <div style={styles.logo}>
           <img src={logoImgSrc} alt="SRSync Logo" style={styles.logoImg} />
-          SRSync
+          SRSync API
         </div>
         <h2 style={styles.title}>Create your account</h2>
         <p style={styles.sub}>Start managing your API keys</p>

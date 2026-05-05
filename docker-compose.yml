@@ -35,7 +35,7 @@ services:
 
   # Backend API
   backend:
-    build: .
+    build: ./backend
     container_name: srsync-backend
     restart: always
     environment:
