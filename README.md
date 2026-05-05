@@ -201,16 +201,6 @@ This starts 4 containers: PostgreSQL, Redis, Backend API, and Frontend (Nginx).
 
 ---
 
-## 👥 Team Members
-
-| Name | Role | Contribution |
-| :--- | :--- | :--- |
-| **Samir Sonkar** | Backend Developer | REST API, Authentication, Rate Limiting, Payments, AI Integration, Deployment |
-| **Sakshi** | Frontend Developer | React Dashboard, UI/UX Design, Charts, AI Assistant Widget, Admin Panel |
-| **Rupam** | Database Developer | PostgreSQL Schema, Data Models, Migrations, Redis Config, Analytics Queries |
-
----
-
 ## 📬 Contact
 - **GitHub**: [@ltsam26](https://github.com/ltsam26)
 - **Email**: sonkarsamir2035@gmail.com
